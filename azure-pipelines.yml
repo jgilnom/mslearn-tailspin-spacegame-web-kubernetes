@@ -5,7 +5,7 @@ variables:
   webRepository: 'web'
   tag: '$(Build.BuildId)'
   leaderboardRepository: 'leaderboard'
-  imagePullSecret: 'secret'
+  imagePullSecret: 'acrjgntokiota'
   ACR: 'acrjgntokiota.azurecr.io'
 
 stages:
@@ -67,14 +67,15 @@ stages:
           steps:
             - download: current
               artifact: manifests
-            - task: KubernetesManifest@0
-              displayName: Create imagePullSecret
-              inputs:
-                action: createSecret
-                secretName: $(imagePullSecret)
-                dockerRegistryEndpoint: 'Container Registry Connection'
-                kubernetesServiceConnection: 'spike-gamespace-dev-1597244200592'
-                namespace: 'gamespace-dev'
+            # Secret created with kubectl. Not supported for different subscriptions in another account.
+              #- task: KubernetesManifest@0
+            #  displayName: Create imagePullSecret
+            #  inputs:
+            #    action: createSecret
+            #    secretName: $(imagePullSecret)
+            #    dockerRegistryEndpoint: 'Container Registry Connection'
+            #    kubernetesServiceConnection: 'spike-gamespace-dev-1597244200592'
+            #    namespace: 'gamespace-dev'
             - task: KubernetesManifest@0
               displayName: Deploy to Kubernetes cluster
               inputs:
